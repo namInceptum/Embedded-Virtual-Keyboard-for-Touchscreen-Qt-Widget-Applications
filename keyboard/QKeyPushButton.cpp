@@ -14,6 +14,7 @@ QKeyPushButton::QKeyPushButton(QWidget *parent) :
 {
 
 	this->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(DEFAULT_BACKGROUND_BUTTON));
+    
 	connect(this, SIGNAL(pressedKey(bool)), SLOT(getKeyPress(bool)));
     if ((static_cast<widgetKeyBoard *> (parent))->isEmbeddedKeyboard() == true)
     this->style_embedded = QString(EMBEDDED_KEYBOARD);
@@ -25,6 +26,7 @@ void QKeyPushButton::getKeyPress(bool capsStatus)
 	int 		keyCode = 0;
 	QKeyEvent	*key = NULL;
 	QString		text = this->text();
+    text.replace("&&", "&"); // for the & key we need to use the && so when writing into the LineEdit remove one &
 
     // for all special key except CAPS (RETURN, ALT, SHIFT, etc ...) shall forward to the widgetKeyBoard component:
     if (NO_SPECIAL_KEY(text) == false && (IS_BACK(text) == true || IS_BACK_EMB(text) == true || IS_TAB(text) == true ||
@@ -39,10 +41,14 @@ void QKeyPushButton::getKeyPress(bool capsStatus)
         if (capsStatus == false)    // if it must be lowercase, check if the character is alphabetic
         {
             text = text.toLower();
+            
+            // now also change the shown key on the keyboard e.g. a instead of A
+            qDebug() << "lower case: Pressed Key: " << text; // text can be letters or special character
             key = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
 		}
 		else
             key = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::ShiftModifier, text);
+            qDebug() << "upper case: Pressed Key: " << text;
 	}
         if(IS_RETURN(text)==true)
         {
@@ -66,12 +72,23 @@ void QKeyPushButton::mousePressEvent(QMouseEvent *)
     // if it is the uppercase:
     if (IS_CAPS(text) == true)
     {
-        if (m_capsActive == false)
+        
+        if (m_capsActive == false){
 			m_capsActive = true;
-        else
-        {
-            changedColorButton = QString(DEFAULT_BACKGROUND_BUTTON);
+            qDebug() << "enable CapsLock: m_capsActive = " << m_capsActive;
+            // if the capslock button is pressed, change layout from e.g. 'a' to 'A' and vise versa
+            tmpKeyBoard->toggleCapsLock();
+            // visual feedback for CAPS key itself
+            
+        }else{
+            changedColorButton = QString(FUNCTIONAL_BUTTON_STYLE); // DEFAULT_BACKGROUND_BUTTON
+            
 			m_capsActive = false;
+            qDebug() << "disable capslock";
+            tmpKeyBoard->toggleCapsLock();
+
+
+
 		}
         this->setStyleSheet(defaultStyleButton + changedColorButton + this->style_embedded);
 		this->repaint();
@@ -79,12 +96,15 @@ void QKeyPushButton::mousePressEvent(QMouseEvent *)
 	}
     else if (tmpKeyBoard->isEnabledSwitchingEcho() == true && (IS_PASSWORD(text) == true || IS_PASSWORD_EMB(text) == true))
         tmpKeyBoard->switchKeyEchoMode(tmpKeyBoard->currentTextBox());
-    else
-    {
+    else{ // color while key is pressed
+        
         this->setStyleSheet(defaultStyleButton + changedColorButton + this->style_embedded);
 		this->repaint();
 		QCoreApplication::processEvents();
 		emit pressedKey(m_capsActive);
+         qDebug() << "emit pressedKey: m_capsActive = " << m_capsActive; // 
+         
+
 	}
     this->m_oldYKey = 0;
 
@@ -93,6 +113,15 @@ void QKeyPushButton::mousePressEvent(QMouseEvent *)
         tmpKeyBoard->setCursor(Qt::BlankCursor);
         QCoreApplication::processEvents();
     }
+}
+
+// check if 
+bool QKeyPushButton::isFunctionalKey(const QString& text)
+{
+    return IS_RETURN(text)
+        || IS_BACK(text)
+        || IS_BACK_EMB(text)
+        || IS_SPACE(text);
 }
 
 void QKeyPushButton::mouseReleaseEvent(QMouseEvent * /* event */)
@@ -107,9 +136,29 @@ void QKeyPushButton::mouseReleaseEvent(QMouseEvent * /* event */)
         {
             tmpKeyBoard->setCursor(Qt::ArrowCursor);
             QCoreApplication::processEvents();
-        }        
-        this->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(DEFAULT_BACKGROUND_BUTTON) + this->style_embedded);
+        }
+                
+        //this->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(DEFAULT_BACKGROUND_BUTTON) + this->style_embedded);
+        if (isFunctionalKey(this->text()))
+        {
+            this->setStyleSheet(
+                QString(DEFAULT_STYLE_BUTTON)
+              + QString(FUNCTIONAL_BUTTON_STYLE)
+              + this->style_embedded
+            );
+        }
+        else
+        {
+            this->setStyleSheet(
+                QString(DEFAULT_STYLE_BUTTON)
+              + QString(DEFAULT_BACKGROUND_BUTTON)
+              + this->style_embedded
+            );
+        }
     }
+
     else if (pressedEcho == true && tmpKeyBoard->isEnabledSwitchingEcho() == false && tmpKeyBoard->currentTextBox()->echoMode() == QLineEdit::Normal)
         this->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(DEFAULT_BACKGROUND_BUTTON) + this->style_embedded);
 }
+
+

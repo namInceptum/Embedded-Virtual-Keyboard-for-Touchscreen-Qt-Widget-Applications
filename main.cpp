@@ -1,16 +1,11 @@
-#include <QtGlobal>
+#include "mainwindow.h"
+
 #include <QApplication>
-#include <QTranslator>
-#include <QLibraryInfo>
-#include "tester.h"
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    QApplication    app(argc, argv);
-    Tester          w;
-
-    QApplication::setApplicationName("widgetKeyboard");
+    QApplication a(argc, argv);
+    MainWindow w;
     w.show();
-    return app.exec();
+    return a.exec();
 }

@@ -1,8 +1,9 @@
 #include "widgetKeyBoard.h"
 #include <QApplication>
-#include <QDesktopWidget>
-#include <QLayout>
+#include <QGuiApplication>
 #include <QScreen>
+#include <QLayout>
+
 #include <QKeyEvent>
 #include <QDir>
 
@@ -22,6 +23,9 @@ widgetKeyBoard::widgetKeyBoard(bool embeddedKeyboard, QWidget *activeForm,  bool
 {
     this->m_zoomedKey = NULL;
     this->m_clipboard->clear();
+    connect(qApp, &QApplication::focusChanged,
+        this, &widgetKeyBoard::onFocusChanged);
+
 
 }
 
@@ -83,9 +87,9 @@ QKeyPushButton * widgetKeyBoard::createNewKey(QString keyValue)
         height = KEY_HEIGHT_EMBEDDED;
         style += QString(EMBEDDED_KEYBOARD);
     }
-    else {
-        width = 54;
-        height = 40;
+    else { // set width and height of Buttons
+        width = 54/2;
+        height = 40/2;
     }
     tmp->setObjectName(keyValue);
     tmp->setMinimumSize(width, height);
@@ -97,6 +101,7 @@ QKeyPushButton * widgetKeyBoard::createNewKey(QString keyValue)
 
 void widgetKeyBoard::controlKeyEcho(QLineEdit *control)
 {
+
     QString         textToSearch;
     QKeyPushButton  *echoControlKey;
     QString         tmpStyle;
@@ -138,7 +143,12 @@ void widgetKeyBoard::controlKeyEcho(QLineEdit *control)
         echoControlKey->repaint();
         QApplication::processEvents();
     }
+
+    
 }
+
+
+
 
 //
 // receives the characters that have been typed:
@@ -352,10 +362,35 @@ void widgetKeyBoard::createKeyboard()
 	QKeyPushButton	*tmp = NULL;	
     QVBoxLayout     *tmpVLayout = new QVBoxLayout;
     QHBoxLayout     *tmpLayout = new QHBoxLayout;
+    
     QGridLayout     *gridLayout = NULL;
     //QString         tmpStyle = QString::null;
     QString         tmpStyle = QString();
     QString         backspace;
+
+    // create line for special characters: !  "  %  &  (  )  =   <  >
+    //tmpLayout = new QHBoxLayout;
+    tmpLayout->addWidget(createNewKey(tr("!")));
+    tmpLayout->addWidget(createNewKey(tr("Â§")));
+    tmpLayout->addWidget(createNewKey(tr("$")));
+    tmpLayout->addWidget(createNewKey(tr("%")));
+    tmpLayout->addWidget(createNewKey(tr("&&")));
+    tmpLayout->addWidget(createNewKey(tr("(")));
+    tmpLayout->addWidget(createNewKey(tr(")")));
+    tmpLayout->addWidget(createNewKey(tr("=")));
+    tmpLayout->addWidget(createNewKey(tr("<")));
+    tmpLayout->addWidget(createNewKey(tr(">")));
+    tmpLayout->addWidget(createNewKey(tr("+")));
+    tmpLayout->addWidget(createNewKey(tr("-")));
+    tmpLayout->addWidget(createNewKey(tr("*")));
+    
+    
+    
+    tmpVLayout->insertLayout(0, tmpLayout); 
+
+
+    //re-create layout for the next line
+    tmpLayout = new QHBoxLayout;
 
     if (this->isNumericPad() == true)
     {
@@ -405,31 +440,33 @@ void widgetKeyBoard::createKeyboard()
         this->setLayout(gridLayout);
     }
     else {
-        //
-        // numeric key printing:
-        tmpLayout->addWidget(createNewKey("\\"));
+        
+        
+        // numeric key printing first line
+        // from 1 to 9
         for (short i = 49; i <= 57; i++)
         {
             tmpLayout->addWidget(createNewKey(QChar(i)));
         }
 
         tmpLayout->addWidget(createNewKey(tr("0")));
+        tmpLayout->addWidget(createNewKey("\\")); // backslash
         tmpLayout->addWidget(createNewKey(tr("/")));
         tmpLayout->addWidget(createNewKey(tr("?")));
         tmpLayout->addWidget(createNewKey(tr("'")));
-
-        if (this->isEmbeddedKeyboard() == true)
-        {
+        
+    
+        if (this->isEmbeddedKeyboard() == true){
             backspace = KEY_BACKSPACE_EMBEDDED;
-            tmpStyle = QString(KEY_BACKSPACE_EMBEDDED);
+            tmpStyle = QString(KEY_BACKSPACE_EMBEDDED); //KEY_BACKSPACE_EMBEDDED tmp->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(FUNCTIONAL_BUTTON_STYLE) + QString(EMBEDDED_KEYBOARD));
         }
-        else
-        {
+        else{
             backspace = "BACKSPACE";
             tmpStyle = QString(KEY_BACKSPACE);
         }
 
         tmp = createNewKey(tmpStyle);
+        tmp->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(FUNCTIONAL_BUTTON_STYLE) + QString(EMBEDDED_KEYBOARD));
         tmp->setMaximumWidth(tmp->maximumWidth() * 2);
         tmp->setMinimumWidth(tmp->minimumWidth() * 2);
         tmpLayout->addWidget(tmp);
@@ -438,21 +475,18 @@ void widgetKeyBoard::createKeyboard()
         if (this->isEmbeddedKeyboard() == true)
             tmpStyle = tmpStyle.toLower();
 
+        /* delete key not needed
         tmp = createNewKey(tmpStyle);
         tmp->setMaximumWidth(tmp->maximumWidth());
         tmp->setMinimumWidth(tmp->minimumWidth());
         tmpLayout->addWidget(tmp);
+        */
 
-        tmpVLayout->insertLayout(0, tmpLayout);
+        tmpVLayout->insertLayout(1, tmpLayout);
         //
-        // Print "Q" line:
+        // Print "Q" line, line 2
         tmpLayout = new QHBoxLayout;
         QVBoxLayout *layoutReturn = new QVBoxLayout;
-
-        tmp = createNewKey(KEY_TAB);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 2 - 5);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 2 - 5);
-        tmpLayout->addWidget(tmp);
 
         tmpLayout->addWidget(createNewKey(tr("Q")));
         tmpLayout->addWidget(createNewKey(tr("W")));
@@ -464,13 +498,17 @@ void widgetKeyBoard::createKeyboard()
         tmpLayout->addWidget(createNewKey(tr("I")));
         tmpLayout->addWidget(createNewKey(tr("O")));
         tmpLayout->addWidget(createNewKey(tr("P")));
-        tmpLayout->addWidget(createNewKey(tr("+")));
-        tmpLayout->addWidget(createNewKey(tr("*")));
-        tmpLayout->addWidget(createNewKey(tr("-")));
+        tmpLayout->addWidget(createNewKey(tr("\"")));
+        // no space for this keys
+        
+        //tmpLayout->addWidget(createNewKey(tr("+")));
+        //tmpLayout->addWidget(createNewKey(tr("*")));
+        //tmpLayout->addWidget(createNewKey(tr("-")));
+        
 
         layoutReturn->insertLayout(0, tmpLayout, 1); // inserts the line of the "Q"
         //
-        // Print "A" line:
+        // Print "A" line, line 3
         tmpLayout = new QHBoxLayout;
 
         tmp = createNewKey(KEY_CAPS);
@@ -491,10 +529,11 @@ void widgetKeyBoard::createKeyboard()
         tmpLayout->addWidget(createNewKey(tr("J")));
         tmpLayout->addWidget(createNewKey(tr("K")));
         tmpLayout->addWidget(createNewKey(tr("L")));
-        tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("ò").toUtf8())));
-        tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("à").toUtf8())));
-        tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("ù").toUtf8())));
+        //tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("ï¿½").toUtf8()))); // Ã–
+        //tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("ï¿½").toUtf8()))); // Ã„
+        //tmpLayout->addWidget(createNewKey(tr(QString::fromLocal8Bit("ï¿½").toUtf8()))); // Ãœ
         tmpLayout->addWidget(createNewKey(tr("@")));
+        tmpLayout->addWidget(createNewKey(tr("_")));
         tmpLayout->insertStretch(-1, 1);
 
         layoutReturn->insertLayout(1, tmpLayout, 1); // inserts the line of the "A"
@@ -504,8 +543,9 @@ void widgetKeyBoard::createKeyboard()
         tmpLayout->insertLayout(0, layoutReturn, 1);
         //
         // also inserts the enter key:
-
         tmp = createNewKey(KEY_RETURN);
+        tmp->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(FUNCTIONAL_BUTTON_STYLE) + QString(EMBEDDED_KEYBOARD));
+        
         returnPushButton = tmp;
         connect(returnPushButton,SIGNAL(returnKeyPressed()),this,SLOT(returnKeySignalReceived()));
         tmp->setMaximumWidth(tmp->maximumWidth() * 2);
@@ -515,17 +555,13 @@ void widgetKeyBoard::createKeyboard()
         tmpLayout->addWidget(tmp);
         //
         // inserts the horizontal inside the main vertical layout:
-        tmpVLayout->insertLayout(1, tmpLayout);
+        tmpVLayout->insertLayout(2, tmpLayout);
         //
-        // Print "Z" line:
+        // Print "Z" line, line 4
         tmpLayout = new QHBoxLayout;
 
-        tmp = createNewKey(KEY_CUT_LEFT);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 2);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 2);
-        tmpLayout->addWidget(tmp);
 
-        tmpLayout->addWidget(createNewKey(tr("_")));
+        //tmpLayout->addWidget(createNewKey(tr("_"))); //
         tmpLayout->addWidget(createNewKey(tr("Z")));
         tmpLayout->addWidget(createNewKey(tr("X")));
         tmpLayout->addWidget(createNewKey(tr("C")));
@@ -535,48 +571,40 @@ void widgetKeyBoard::createKeyboard()
         tmpLayout->addWidget(createNewKey(tr("M")));
         tmpLayout->addWidget(createNewKey(tr(",")));
         tmpLayout->addWidget(createNewKey(tr(";")));
+        // no space for this keys
+        
         tmpLayout->addWidget(createNewKey(tr(":")));
         tmpLayout->addWidget(createNewKey(tr(".")));
+        
+        /*
         tmp = createNewKey(KEY_CTRL_LEFT);
         tmp->setMaximumWidth(tmp->maximumWidth() * 3 + 5);
         tmp->setMinimumWidth(tmp->minimumWidth() * 3 + 5);
         tmpLayout->addWidget(tmp);
-        tmpVLayout->insertLayout(2, tmpLayout);
+        */
+
+        tmpVLayout->insertLayout(3, tmpLayout);
         //
         // SPACE line print:
-        tmpLayout = new QHBoxLayout;
-        tmp = createNewKey(KEY_COPY);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 2);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 2);
-        tmpLayout->addWidget(tmp);
 
+       tmpLayout = new QHBoxLayout;
+        /*
         tmp = createNewKey(KEY_ALT);
         tmp->setMaximumWidth(tmp->maximumWidth() * 2);
         tmp->setMinimumWidth(tmp->minimumWidth() * 2);
         tmpLayout->addWidget(tmp);
+        */
 
         tmp = createNewKey(KEY_SPACE);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 10);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 10);
+        tmp->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(FUNCTIONAL_BUTTON_STYLE) + QString(EMBEDDED_KEYBOARD));
+        tmp->setMaximumWidth(tmp->maximumWidth() * 12); // 10
+        tmp->setMinimumWidth(tmp->minimumWidth() * 12); // 10
         tmpLayout->addWidget(tmp);
 
-        // password echo button:
-        if (this->isEmbeddedKeyboard() == true)
-            tmpStyle = QString(KEY_HIDECHAR_EMBEDDED);
-        else
-            tmpStyle = QString(KEY_HIDECHAR);
 
-        tmp = createNewKey(tmpStyle);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 2);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 2);
-        tmpLayout->addWidget(tmp);
-        //
 
-        tmp = createNewKey(KEY_PASTE);
-        tmp->setMaximumWidth(tmp->maximumWidth() * 2);
-        tmp->setMinimumWidth(tmp->minimumWidth() * 2);
-        tmpLayout->addWidget(tmp);
-        tmpVLayout->insertLayout(3, tmpLayout);
+        tmpVLayout->insertLayout(4, tmpLayout);
+        
 
         //
         // hook the layout to the whole form:
@@ -590,3 +618,57 @@ void widgetKeyBoard::returnKeySignalReceived()
 {
     emit keySignalReceived();
 }
+
+
+// handle capslock
+void widgetKeyBoard::updateKeyCaps()
+{
+    QList<QKeyPushButton*> keys = findChildren<QKeyPushButton*>();
+
+    for (QKeyPushButton* key : keys)
+    {
+        QString t = key->text();
+
+        // only touch alphabetic keys
+        if (t.size() == 1 && t[0].isLetter())
+        {
+            key->setText(m_capsLock ? t.toUpper() : t.toLower());
+        }
+    }
+}
+
+void widgetKeyBoard::toggleCapsLock()
+{
+    m_capsLock = !m_capsLock;
+    updateKeyCaps();
+}
+
+//BOMKE: focus change frome one to another QLineEdit
+void widgetKeyBoard::onFocusChanged(QWidget *old, QWidget *now)
+{
+    QLineEdit *newLineEdit = qobject_cast<QLineEdit *>(now);
+
+    if (newLineEdit) 
+    {
+        // Update all relevant internal pointers
+        m_currentTextBox = newLineEdit;
+        m_nextInput = newLineEdit;
+
+        // Update echo behavior if needed
+        controlKeyEcho(m_currentTextBox);
+        setCurrentTextStyle(m_currentTextBox);
+
+        // Optional: make sure keyboard knows what window it belongs to
+        m_activeWindow = m_currentTextBox->window();
+
+        // If necessary, reinitialize the keyboard internals for the new field
+        init_keyboard(m_currentTextBox);
+    }
+    else
+    {
+        // if focus leaves all QLineEdit widgets
+        m_currentTextBox = nullptr;
+        m_nextInput = nullptr;
+    }
+}
+

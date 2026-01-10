@@ -4,34 +4,39 @@
 
     // colors and style to use for the keyboard and keys:
 	#define _QKEYPUSHBUTTON_H
+                                                // "background-color: #cfd2d9;"
+        #define DEFAULT_BACKGROUND_BUTTON        "background-color: #cfd2d9;" // "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #8C8F8C, stop: 1 #cfd2d9);"
+        #define CHANGED_BACKGROUND_BUTTON       "background: #3478f2; color: white;"
 
-        #define DEFAULT_BACKGROUND_BUTTON       "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #8C8F8C, stop: 1 #000000);"
-        #define CHANGED_BACKGROUND_BUTTON       "background:lightgray;color:darkred;"
-
-        #define DEFAULT_STYLE_BUTTON            "color:white;border: 1px solid #000000;border-radius:6px;"
+        #define DEFAULT_STYLE_BUTTON              "color:black; border:1px solid #cfd2d9; border-radius:3px; font-family:Arial; font-size:12px;"
+        //#define DEFAULT_STYLE_BUTTON            "color:black;border: 1px solid #cfd2d9; border-radius:3px;"
+      
+        // CAPS, Enter, and delete Button needs to be silhouetted from the other buttons
+        #define FUNCTIONAL_BUTTON_STYLE         "background: #7393B3;color: white;"
+        //#define FUNCTIONAL_BUTTON_FONT          "font-size:14px;"
         #define STYLE_FOCUS_TEXT                "border: 1px solid red"
 
-        #define EMBEDDED_KEYBOARD               "font-size:9px"
-        #define WIDTH_ZOOM_KEY                  20
+        #define EMBEDDED_KEYBOARD               "font-size:12px"
+        #define WIDTH_ZOOM_KEY                  25
         #define HEIGHT_ZOOM_KEY                 WIDTH_ZOOM_KEY
         //
         // special keys used within classes:
-        #define KEY_TAB                         tr("TAB")
+        #define KEY_TAB                         tr("TAB") // not needed
         #define KEY_ALT                         tr("ALT")
-        #define KEY_CAPS                        tr("CAPS")
+        #define KEY_CAPS                        tr("⇪") // as image more nice
         #define KEY_CTRL_LEFT                   tr("CTRL")
-        #define KEY_CUT_LEFT                    tr("Cut")
-        #define KEY_COPY                        tr("Copy")
+        #define KEY_CUT_LEFT                    tr("Cut") // no needed
+        #define KEY_COPY                        tr("Copy") // no needed
         #define KEY_PASTE                       tr("Paste")
-        #define KEY_BACKSPACE                   tr("BACKSPACE")
+        #define KEY_BACKSPACE                   tr("BACKSPACE ") //  ⌫
         #define KEY_BACKSPACE_EMBEDDED          "<---"
-        #define KEY_HIDECHAR                    tr("echo")
+        #define KEY_HIDECHAR                    tr("echo") // not needed
         #define KEY_HIDECHAR_EMBEDDED           tr("Echo")
         #define KEY_CANC                        tr("DEL")
-        #define KEY_RETURN                      tr("RETURN")
-        #define KEY_SPACE                       " "
-        #define KEY_WIDTH_EMBEDDED              30 //26
-        #define KEY_HEIGHT_EMBEDDED             30 //22
+        #define KEY_RETURN                      tr("RETURN") // return ⏎
+        #define KEY_SPACE                       " " // too long
+        #define KEY_WIDTH_EMBEDDED              26 //26 or 30
+        #define KEY_HEIGHT_EMBEDDED             22 //22 or 30
         //
         // parameterized macro to reduce the code:
         #define IS_KEY(keyTextPressed, keyValCompare)   (keyTextPressed).contains((keyValCompare), Qt::CaseInsensitive)
@@ -51,6 +56,7 @@
         #define IS_COPY(text)                   IS_KEY(text, KEY_COPY)
         #define IS_PASTE(text)                  IS_KEY(text, KEY_PASTE)
         #define NO_SPECIAL_KEY(text)            ((text).length() == 1)
+        
 
     // class definition representing a key:
 	class QKeyPushButton : public QPushButton {
@@ -75,6 +81,7 @@
 		protected:
 			void 		mousePressEvent(QMouseEvent *event);
 			void 		mouseReleaseEvent(QMouseEvent *event);
+                  bool        isFunctionalKey(const QString& text); // to check if the pressed button is SPACE, RETURN, BACKSPACE 
 	};
 
 #endif // _QKEYPUSHBUTTON_H
