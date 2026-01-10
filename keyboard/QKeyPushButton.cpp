@@ -32,11 +32,12 @@ void QKeyPushButton::getKeyPress(bool capsStatus)
     if (NO_SPECIAL_KEY(text) == false && (IS_BACK(text) == true || IS_BACK_EMB(text) == true || IS_TAB(text) == true ||
                                          IS_RETURN(text) == true || IS_CTRL_LEFT(text) == true ||
                                          IS_ALT(text) == true || IS_CANC(text) == true || IS_CUT_LEFT(text) == true ||
-                                         IS_PASSWORD(text) || IS_PASSWORD_EMB(text) || IS_PASTE(text) || IS_COPY(text)))
-
+                                         IS_PASSWORD(text) || IS_PASSWORD_EMB(text) || IS_PASTE(text) || IS_COPY(text))){
+        
+        //qDebug() << "big if condition ";
 		key = new QKeyEvent(QEvent::KeyPress, keyCode, Qt::NoModifier, text);
-    else
-   { // these are printable characters
+        //qDebug() << "big if condition 2";
+    }else{ // these are printable characters
         keyCode = text.toUtf8()[0]; // takes the numeric value (always uppercase)
         if (capsStatus == false)    // if it must be lowercase, check if the character is alphabetic
         {
@@ -51,8 +52,10 @@ void QKeyPushButton::getKeyPress(bool capsStatus)
             qDebug() << "upper case: Pressed Key: " << text;
 	}
         if(IS_RETURN(text)==true)
-        {
-            emit returnKeyPressed();
+        {   // todo BOMKE: implement action if return key is pressed
+            qDebug() << "return key pressed";
+            //emit returnKeyPressed();
+            qDebug() << "return key pressed 2";
 
         }
 
@@ -138,7 +141,7 @@ void QKeyPushButton::mouseReleaseEvent(QMouseEvent * /* event */)
             QCoreApplication::processEvents();
         }
                 
-        //this->setStyleSheet(QString(DEFAULT_STYLE_BUTTON) + QString(DEFAULT_BACKGROUND_BUTTON) + this->style_embedded);
+        //if a functional key is pressed do not change the style of the button
         if (isFunctionalKey(this->text()))
         {
             this->setStyleSheet(

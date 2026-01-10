@@ -11,11 +11,11 @@ qt_standard_project_setup()
 
 # Define the executable and UI/Source files
 qt_add_executable(keyboard
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    ui_mainwindow.h
+    src/main.cpp
+    src/mainwindow.cpp
+    src/mainwindow.h
+    src/mainwindow.ui
+    src/ui_mainwindow.h
     # include keyboard files
     keyboard/widgetKeyBoard.cpp
     keyboard/QKeyPushButton.cpp

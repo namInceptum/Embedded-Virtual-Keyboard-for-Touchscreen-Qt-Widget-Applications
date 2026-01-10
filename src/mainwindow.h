@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 // include keyboard files
-#include "keyboard/widgetKeyBoard.h"
+#include "../keyboard/widgetKeyBoard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

@@ -51,21 +51,7 @@ When the building process succeed it will open the binary app keyboard and we ar
 
 Open `ui_mainwindow.h` in VSCode and eddit the code as needed. Alternativaley you can work with the mainwindow.ui file Thererefore open Qt Designer and add two buttons: `OK` and `Cancel`. Change their object names to **btnOk** and **btnCancel**, respectively.
 
-### Step 7: Implement the Main Application Logic
+### Example Image
 
-In `main.cpp`, set up a simple Qt application:
+[![Image](/media/keyboard.png)](www.youtube.com/@BOMKE007)
 
-### Step 8: Build and Run the Project
-
-1. Open Command Palette (Ctrl + Shift + P).
-2. Type CMake: Build and run the build process.
-3. Once built successfully, run the application. The window should appear.
-
-### Step 9: Debugging and Running
-To debug, create a launch.json configuration:
-
-1. Open Run and Debug (Ctrl + Shift + D).
-2. Click Create a launch.json file.
-3. Select C++ (Windows).
-4. Choose Visual Studio Debugger.
-5. Save and start debugging.
