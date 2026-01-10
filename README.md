@@ -5,7 +5,7 @@
 `Qt` is a popular cross-platform framework for building GUI applications. While Qt Creator is the official IDE for Qt development, many developers prefer using **Visual Studio Code** for its flexibility and extensive extensions. In this guide, we will walk through the process of setting up and building a virtual keyboard for Touchscreen based Usage of Qt application using **VS Code**. This Repo is based on the great work of [florisa](https://github.com/florisa/qt-widget-virtual-keyboard), we just modifyed the layout for a RaspberryPI Touchscreen. Thanks Therefore!
 
 ### Video Tutorial:
-Comming Soon.
+Comming Soon on my [channel](www.youtube.com/@BOMKE007)
 
 ## Prerequisites
 
@@ -53,5 +53,5 @@ Open `ui_mainwindow.h` in VSCode and eddit the code as needed. Alternativaley yo
 
 ### Example Image
 
-[![Image](/media/keyboard.png)](www.youtube.com/@BOMKE007)
+[![Image](/media/keyboard.png)]
 
