@@ -53,5 +53,5 @@ Open `ui_mainwindow.h` in VSCode and eddit the code as needed. Alternativaley yo
 
 ### Example Image
 
-[![Image](/media/keyboard.png)]
+[Image](/media/keyboard.png)
 

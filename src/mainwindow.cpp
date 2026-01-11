@@ -1,4 +1,11 @@
-#include "mainwindow.h"
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+
+ #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -6,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    
     connect(ui->btnOk, SIGNAL(clicked()),this,SLOT(on_btnOk_Clicked()));
     connect(ui->btnCancel, SIGNAL(clicked()),this,SLOT(on_btnCancel_Clicked()));
 
@@ -29,8 +37,8 @@ void MainWindow::on_btnOk_Clicked()
 {
     qDebug() << "Ok button clicked";
     // processing of the QLineEdit text:
-    qDebug() << "LineEdit 1: " << ui->lineEdit->text();
-    qDebug() << "LineEdit 2: " << ui->lineEdit_2->text();
+    qDebug() << "UserName: " << ui->lineEdit->text();
+    qDebug() << "Password: " << ui->lineEdit_2->text();
 }
 
 void MainWindow::on_btnCancel_Clicked()

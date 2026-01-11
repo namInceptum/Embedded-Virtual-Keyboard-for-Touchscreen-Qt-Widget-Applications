@@ -1,9 +1,12 @@
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+
 /********************************************************************************
-** Form generated from reading UI file 'mainwindow.ui'
-**
-** Created by: Qt User Interface Compiler version 6.4.2
-**
-** WARNING! All changes made in this file will be lost when recompiling UI file!
+** you can define your Design here
 ********************************************************************************/
 
 #ifndef UI_MAINWINDOW_H
@@ -101,9 +104,9 @@ public:
         MainWindow->setStatusBar(statusbar);
 
 
-         // keyboard setup
+         // keyboard setup - If you have an another UI file, just copy this section and it to your project to integrate the keyboard
         keyboard_frame = new QFrame(centralwidget); // 
-        keyboard_frame->setObjectName("frame");
+        keyboard_frame->setObjectName("keyboard_frame");
         keyboard_frame->setGeometry(QRect(50, 240, 520, 180));
         keyboard_frame->setAutoFillBackground(false);
         keyboard_frame->setStyleSheet(QString::fromUtf8("background-color: #8C8F8C; \n"

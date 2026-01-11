@@ -1,3 +1,8 @@
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
 #ifndef _WIDGETKEYBOARD_H
 	
     #define _WIDGETKEYBOARD_H

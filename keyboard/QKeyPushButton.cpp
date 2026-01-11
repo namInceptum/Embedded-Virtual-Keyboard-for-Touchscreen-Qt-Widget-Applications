@@ -1,3 +1,10 @@
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+ 
 #include "QKeyPushButton.h"
 #include "widgetKeyBoard.h"
 #include <QKeyEvent>

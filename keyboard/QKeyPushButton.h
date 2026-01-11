@@ -1,11 +1,17 @@
-#include <QPushButton>
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+ #include <QPushButton>
 
 #ifndef _QKEYPUSHBUTTON_H
 
     // colors and style to use for the keyboard and keys:
 	#define _QKEYPUSHBUTTON_H
                                                 // "background-color: #cfd2d9;"
-        #define DEFAULT_BACKGROUND_BUTTON        "background-color: #cfd2d9;" // "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #8C8F8C, stop: 1 #cfd2d9);"
+        #define DEFAULT_BACKGROUND_BUTTON       "background-color: #cfd2d9;" // "background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #8C8F8C, stop: 1 #cfd2d9);"
         #define CHANGED_BACKGROUND_BUTTON       "background: #3478f2; color: white;"
 
         #define DEFAULT_STYLE_BUTTON              "color:black; border:1px solid #cfd2d9; border-radius:3px; font-family:Arial; font-size:12px;"

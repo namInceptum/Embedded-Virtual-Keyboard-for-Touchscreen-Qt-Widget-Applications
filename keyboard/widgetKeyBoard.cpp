@@ -1,3 +1,10 @@
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+ 
 #include "widgetKeyBoard.h"
 #include <QApplication>
 #include <QGuiApplication>
@@ -10,7 +17,7 @@
 
 #define ZOOMED_WIDGET_STYLESHEET    "border-radius:8px;font:bold 16px;color:white;"
 
-
+//BOMKE: keyboard constructor
 widgetKeyBoard::widgetKeyBoard(bool embeddedKeyboard, QWidget *activeForm,  bool onlyNumericPad, QWidget *parent) :
         QWidget(parent), m_nextInput(NULL),
         m_activeWindow(activeForm),
@@ -49,6 +56,7 @@ bool widgetKeyBoard::isEmbeddedKeyboard(void)
     return (this->m_embeddedKeyboard);
 }
 
+//BOMKE: create new key
 QKeyPushButton * widgetKeyBoard::createNewKey(QString keyValue)
 {
     QKeyPushButton *tmp = new QKeyPushButton(this);
@@ -148,12 +156,11 @@ void widgetKeyBoard::controlKeyEcho(QLineEdit *control)
 }
 
 
-
-
-//
+//BOMKE: 
 // receives the characters that have been typed:
 void widgetKeyBoard::receiptChildKey(QKeyEvent *event, QLineEdit *focusThisControl, bool reset)
 {
+    // check on which QLineEdit chracters are typed
     static QLineEdit    *nextInput = NULL;
 
     if (reset == true) { // reinitializes the control
@@ -195,7 +202,7 @@ void widgetKeyBoard::receiptChildKey(QKeyEvent *event, QLineEdit *focusThisContr
              nextInput->setCursorPosition(tmpPos);
              nextInput->setSelection(tmpPos-1, 1);
         }
-        else if (IS_COPY(newKey) == true || IS_CUT_LEFT(newKey) == true) {
+        else if (IS_COPY(newKey) == true || IS_CUT_LEFT(newKey) == true) {//copy key commented out
             QPushButton *button = this->findChild<QPushButton *>(KEY_PASTE);
 
             if (button != NULL) {
@@ -209,7 +216,7 @@ void widgetKeyBoard::receiptChildKey(QKeyEvent *event, QLineEdit *focusThisContr
                     button->setEnabled(false);
             }
         }
-        else if (IS_PASTE(newKey) == true)
+        else if (IS_PASTE(newKey) == true)// commented out
             nextInput->setText(this->m_clipboard->text());
         else if (IS_ALT(newKey) == true || IS_CTRL_LEFT(newKey) == true) {
             ; // it does not perform any operation
@@ -233,7 +240,7 @@ void widgetKeyBoard::switchKeyEchoMode(QLineEdit *control)
     this->controlKeyEcho(control);
 }
 
-
+//BOMKE: change of QLineEdit object
 QLineEdit * widgetKeyBoard::getNextTextbox(QLineEdit *thisControl, bool reset)
 {
     QLineEdit	*tmpInputFound = NULL;
@@ -357,6 +364,7 @@ void widgetKeyBoard::hide(bool changeColor)
     }
 }
 
+//BOMKE: create keyboard structure
 void widgetKeyBoard::createKeyboard()
 {
 	QKeyPushButton	*tmp = NULL;	
@@ -620,7 +628,7 @@ void widgetKeyBoard::returnKeySignalReceived()
 }
 
 
-// handle capslock
+//BOMKE handle capslock
 void widgetKeyBoard::updateKeyCaps()
 {
     QList<QKeyPushButton*> keys = findChildren<QKeyPushButton*>();
@@ -632,7 +640,7 @@ void widgetKeyBoard::updateKeyCaps()
         // only touch alphabetic keys
         if (t.size() == 1 && t[0].isLetter())
         {
-            key->setText(m_capsLock ? t.toUpper() : t.toLower());
+            key->setText(m_capsLock ? t.toUpper() : t.toLower()); // 
         }
     }
 }

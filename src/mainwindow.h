@@ -1,3 +1,10 @@
+/**
+ *  MIT License
+ *  Copyright (c) BOMKE; florisa
+ *  See accompanying LICENSE file
+ */
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
